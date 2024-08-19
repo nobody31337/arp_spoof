@@ -30,7 +30,9 @@ bool arpSend(pcap_t *handle,      /* Network handle                             
 {
     u_char packet[42];
     int packetIndex = 0;
+
     ether_header eth;
+
     eth.dst = eth_dst;
     eth.src = eth_src;
     eth.ether_type = hexswap(ETHERTYPE_ARP);
@@ -38,6 +40,7 @@ bool arpSend(pcap_t *handle,      /* Network handle                             
     packetIndex += sizeof(ether_header);
 
     arp_header arp;
+
     arp.arp_hwtype = hexswap(ARPHRD_ETHER);
     arp.arp_prtype = hexswap(ETHERTYPE_IP);
     arp.arp_hwsize = 6;
@@ -97,6 +100,7 @@ int main()
 
     printf("Select mode\n1. ARP request\n2. ARP reply\n\n\t\t> ");
     scanf("%d", &mode);
+
     switch (mode)
     {
     case 1:
@@ -109,30 +113,39 @@ int main()
         printf("Wrong input\n");
         return -1;
     }
+
     system("clear");
+
     printf("Select mode\n1. UNICAST\n2. BROADCAST\n\n\t\t> ");
     scanf("%d", &mode);
+
     switch (mode)
     {
     case 1:
         printf("\nEnter source mac address\n\n\t\t> ");
         scanf("%x:%x:%x:%x:%x:%x", &ethernetSrcMAC.oui[0], &ethernetSrcMAC.oui[1], &ethernetSrcMAC.oui[2],
               &ethernetSrcMAC.nic[0], &ethernetSrcMAC.nic[1], &ethernetSrcMAC.nic[2]);
+
         senderMAC = ethernetSrcMAC;
+
         printMACAddr(ethernetSrcMAC);
         printMACAddr(senderMAC);
 
         printf("\nEnter destination mac address\n\n\t\t> ");
         scanf("%x:%x:%x:%x:%x:%x", &ethernetDstMAC.oui[0], &ethernetDstMAC.oui[1], &ethernetDstMAC.oui[2],
               &ethernetDstMAC.nic[0], &ethernetDstMAC.nic[1], &ethernetDstMAC.nic[2]);
+
         targetMAC = ethernetDstMAC;
+
         printMACAddr(ethernetSrcMAC);
         printMACAddr(senderMAC);
+
         printMACAddr(ethernetDstMAC);
         printMACAddr(targetMAC);
 
         printf("\nEnter sender IP\n\n\t\t> ");
         scanf("%u.%u.%u.%u", &senderIP.a, &senderIP.b, &senderIP.c, &senderIP.d);
+
         printMACAddr(ethernetSrcMAC);
         printMACAddr(senderMAC);
         printMACAddr(ethernetDstMAC);
@@ -141,17 +154,20 @@ int main()
 
         printf("\nEnter target IP\n\n\t\t> ");
         scanf("%u.%u.%u.%u", &targetIP.a, &targetIP.b, &targetIP.c, &targetIP.d);
+
         printMACAddr(ethernetSrcMAC);
         printMACAddr(senderMAC);
         printMACAddr(ethernetDstMAC);
         printMACAddr(targetMAC);
         printIPAddr(senderIP);
         printIPAddr(targetIP);
+
         break;
     case 2:
         printf("\nEnter source mac address\n\n\t\t> ");
         scanf("%x:%x:%x:%x:%x:%x", &ethernetSrcMAC.oui[0], &ethernetSrcMAC.oui[1], &ethernetSrcMAC.oui[2],
               &ethernetSrcMAC.nic[0], &ethernetSrcMAC.nic[1], &ethernetSrcMAC.nic[2]);
+
         senderMAC = ethernetSrcMAC;
 
         ethernetDstMAC = {{0xff, 0xff, 0xff}, {0xff, 0xff, 0xff}};
@@ -167,6 +183,7 @@ int main()
         }
         else
             targetIP = {0, 0, 0, 0};
+
         break;
     default:
         printf("Wrong input\n");
@@ -175,16 +192,22 @@ int main()
 
     printf("Ethernet source MAC address: ");
     printMACAddr(ethernetSrcMAC);
+
     printf("Ethernet destination MAC address: ");
     printMACAddr(ethernetDstMAC);
+
     printf("ARP sender MAC: ");
     printMACAddr(senderMAC);
+
     printf("ARP sender IP: ");
     printIPAddr(senderIP);
+
     printf("ARP target MAC: ");
     printMACAddr(targetMAC);
+
     printf("ARP target IP: ");
     printIPAddr(targetIP);
+    
     printf("ARP opcode: ");
     printf(opcode - 1 ? "ARP REPLY\n" : "ARP REQUEST\n");
 
